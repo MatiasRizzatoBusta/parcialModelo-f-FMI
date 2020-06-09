@@ -25,8 +25,11 @@ reducirXPuestosPublicos :: Float->Receta
 reducirXPuestosPublicos reduccion pais = pais{pobActivaPublico = (pobActivaPublico pais) - reduccion, pbi = reduccionPuestosPublicos pais}
 
 reduccionPuestosPublicos :: Pais->Float
-reduccionPuestosPublicos pais | ((>100000).pobActivaPublico) pais = ((*0.8).pobActivaPublico) pais
-                              |otherwise = ((*0.75).pobActivaPublico) pais
+reduccionPuestosPublicos pais | ((>100000).pobActivaPublico) pais = cambioPbi(*0.8) (pobActivaPublico pais)
+                              |otherwise = cambioPbi (*0.75) (pobActivaPublico pais)
+
+cambioPbi:: (Float->Float)->Float->Float
+cambioPbi funcion poblacionActiva =  funcion poblacionActiva
 
 entregarExplotacion :: Recurso->Receta
 entregarExplotacion recurso pais = pais{recursosNaturales = expropioRecurso recurso (recursosNaturales pais),deuda =(deuda pais) - 2}
@@ -35,4 +38,4 @@ expropioRecurso :: Recurso->[Recurso]->[Recurso]
 expropioRecurso recurso = filter (not.(== recurso))
 
 blindaje :: Receta
-blindaje pais = pais{pbi = (pbi pais) + (((*0.5).pbi) pais),pobActivaPublico = (pobActivaPublico pais) - 500 }
+blindaje pais = pais{pbi = (pbi pais) + cambioPbi (*2) (pbi pais),pobActivaPublico = (pobActivaPublico pais) - 500 }
