@@ -5,7 +5,7 @@ laVerdad = True
 
 -------------------------------------------- Punto 1 --------------------------------------------
 data Pais = UnPais{
-    pbi :: Float,
+    ipc :: Float,
     pobActivaPublico :: Float,
     pobActivaPrivado :: Float,
     recursosNaturales :: [Recurso],
@@ -22,14 +22,14 @@ prestarNMillon :: Float->Receta
 prestarNMillon prestamo pais = pais{deuda=(deuda pais) + (prestamo *1.5)}
 
 reducirXPuestosPublicos :: Float->Receta
-reducirXPuestosPublicos reduccion pais = pais{pobActivaPublico = (pobActivaPublico pais) - reduccion, pbi = reduccionPuestosPublicos pais}
+reducirXPuestosPublicos reduccion pais = pais{pobActivaPublico = (pobActivaPublico pais) - reduccion,ipc = reduccionPuestosPublicos pais}
 
 reduccionPuestosPublicos :: Pais->Float
-reduccionPuestosPublicos pais | ((>100000).pobActivaPublico) pais = cambioPbi(*0.8) (pobActivaPublico pais)
-                              |otherwise = cambioPbi (*0.75) (pobActivaPublico pais)
+reduccionPuestosPublicos pais | ((>100000).pobActivaPublico) pais = cambioIpc(*0.8) (pobActivaPublico pais)
+                              |otherwise = cambioIpc (*0.75) (pobActivaPublico pais)
 
-cambioPbi:: (Float->Float)->Float->Float
-cambioPbi funcion poblacionActiva =  funcion poblacionActiva
+cambioIpc:: (Float->Float)->Float->Float
+cambioIpc funcion poblacionActiva =  funcion poblacionActiva
 
 entregarExplotacion :: Recurso->Receta
 entregarExplotacion recurso pais = pais{recursosNaturales = expropioRecurso recurso (recursosNaturales pais),deuda =(deuda pais) - 2}
@@ -38,9 +38,36 @@ expropioRecurso :: Recurso->[Recurso]->[Recurso]
 expropioRecurso recurso = filter (not.(== recurso))
 
 blindaje :: Receta
-blindaje pais = pais{pbi = (pbi pais) + cambioPbi (*2) (pbi pais),pobActivaPublico = (pobActivaPublico pais) - 500 }
+blindaje pais = pais{ipc = (ipc pais) + cambioIpc (*2) (ipc pais),pobActivaPublico = (pobActivaPublico pais) - 500 }
 
 -------------------------------------------- Punto 3 --------------------------------------------
 prestamoPorExplotacion :: Receta
 prestamoPorExplotacion  = entregarExplotacion "mineria".prestarNMillon 200 
 
+-------------------------------------------- Punto 4 --------------------------------------------
+puedenZafar :: [Pais]->[Pais]
+puedenZafar = filter (elem "petroleo".recursosNaturales) --tomo un pais me fijo si en sus recursos esta petroleo y si esta lo tomo
+
+deudaAFavor :: [Pais]->Float
+deudaAFavor = sum.map deuda
+
+{-
+Composicion y orden superior aparece cada vez que se utiliza un . y me permite hacerle a una variable,o una lista de variables 
+en este caso, mas de una funcion sucesivamente.La aplicacion de composicion me permite pasar parametros mediante point free,es decir
+sin declararlo en las variables que va a utilizar.
+Aplicacion parcial fue utilizado en el filter cuando hago elem "petroleo" ya que me permite componer la condicion que utiliza el 
+filter. Usar composicion parcial hace que al funcion espere menos parametros que la original.
+El efecto colateral se logra 
+-}
+
+-------------------------------------------- Punto 5 --------------------------------------------
+estaOrdenadaDePeorAMejor :: Pais->[Receta]->Bool
+estaOrdenadaDePeorAMejor pais (x:y:xs) = (pbi.x) pais < (pbi.y) pais && estaOrdenadaDePeorAMejor pais (y:xs)
+
+pbi :: Pais->Float
+pbi pais = ((*ipc pais).sumoPobActiva) pais
+
+sumoPobActiva :: Pais->Float
+sumoPobActiva pais = (pobActivaPrivado pais) + (pobActivaPrivado pais)
+
+-------------------------------------------- Punto 6 --------------------------------------------
