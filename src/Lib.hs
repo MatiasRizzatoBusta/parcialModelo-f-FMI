@@ -71,3 +71,14 @@ sumoPobActiva :: Pais->Float
 sumoPobActiva pais = (pobActivaPrivado pais) + (pobActivaPrivado pais)
 
 -------------------------------------------- Punto 6 --------------------------------------------
+recursosNaturalesInfinitos :: [String]
+recursosNaturalesInfinitos = "Energia" : recursosNaturalesInfinitos -- le agrega energia al listado de recursos naturales infinitas
+--veces
+
+{-
+si a este pais,le aplicamos la funcion puedenZafar la funcion no va a terminar de filtrar nunca.Esto se debe a que 
+recursosNaturalesInfinitos genero una lista infinita de energia en los recursos y el filter nunca va a encontrar un petroleo o 
+el fin de lista que para que termine.
+La funcion deudaAFavor si funciona con este pais ya que como haskell usa el lazy-evaluation, nunca va a acceder a la lista de recursos
+del pais y va a ir directo a lo que cada pais de la lista tenga en el campo deuda para luego sumarlo.
+-}
