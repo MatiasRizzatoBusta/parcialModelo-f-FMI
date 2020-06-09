@@ -39,3 +39,8 @@ expropioRecurso recurso = filter (not.(== recurso))
 
 blindaje :: Receta
 blindaje pais = pais{pbi = (pbi pais) + cambioPbi (*2) (pbi pais),pobActivaPublico = (pobActivaPublico pais) - 500 }
+
+-------------------------------------------- Punto 3 --------------------------------------------
+prestamoPorExplotacion :: Receta
+prestamoPorExplotacion  = entregarExplotacion "mineria".prestarNMillon 200 
+
