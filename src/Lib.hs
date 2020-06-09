@@ -57,7 +57,8 @@ en este caso, mas de una funcion sucesivamente.La aplicacion de composicion me p
 sin declararlo en las variables que va a utilizar.
 Aplicacion parcial fue utilizado en el filter cuando hago elem "petroleo" ya que me permite componer la condicion que utiliza el 
 filter. Usar composicion parcial hace que al funcion espere menos parametros que la original.
-El efecto colateral se logra 
+El efecto colateral no se puede lograr. Lo que se hace, es hacer una funcion que "copia" los valores originales y cambia estos valores
+en la copia.Entonces al hacer composicion, las funciones que le siguen van a trabajar con esta copia y no con los valores ya cargados
 -}
 
 -------------------------------------------- Punto 5 --------------------------------------------
